@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickBite — Online Food Ordering Website</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Announcement Banner -->
+  <div class="top-banner">
+    <div class="container banner-content">
+      <span>🚀 QuickBite Online Food Ordering — Full-Stack Active (MongoDB Atlas + Express Backend)</span>
+      <span class="banner-badge" id="backendBadge">Full-Stack Live</span>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo">
+        <span class="logo-icon">🍔</span>
+        <span class="logo-text">Quick<span>Bite</span></span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="nav-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search delicious food, burgers, pizza..." autocomplete="off">
+        <button id="clearSearchBtn" class="clear-search-btn" title="Clear search" style="display: none;">&times;</button>
+      </div>
+
+      <!-- Desktop Nav Actions -->
+      <nav class="nav-links">
+        <a href="#menu" class="nav-link">Menu</a>
+        <a href="#features" class="nav-link">About</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Cart Button -->
+        <button id="openCartBtn" class="btn-icon" aria-label="View Shopping Cart">
+          <span class="icon">🛒</span>
+          <span class="btn-label">Cart</span>
+          <span id="cartCountBadge" class="cart-badge">0</span>
+        </button>
+
+        <!-- User Auth State -->
+        <div id="authActions" class="auth-actions">
+          <button id="openAuthBtn" class="btn btn-primary btn-sm">
+            <span>Sign In</span>
+          </button>
+          
+          <!-- Populated when user logs in -->
+          <div id="userDropdown" class="user-dropdown" style="display: none;">
+            <button id="userProfileBtn" class="user-profile-btn">
+              <span class="user-avatar" id="userInitial">U</span>
+              <span class="user-name" id="userNameDisplay">User</span>
+              <span class="dropdown-arrow">▾</span>
+            </button>
+            <div class="dropdown-menu" id="profileMenu">
+              <button id="viewOrdersBtn" class="dropdown-item">📦 My Orders</button>
+              <hr class="dropdown-divider">
+              <button id="logoutBtn" class="dropdown-item text-danger">🚪 Logout</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Menu Hamburger -->
+        <button id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobileMenu" class="mobile-menu">
+      <div class="mobile-search">
+        <input type="text" id="mobileSearchInput" placeholder="Search food items...">
+      </div>
+      <a href="#menu" class="mobile-nav-link">🍽️ Explore Menu</a>
+      <a href="#features" class="mobile-nav-link">⭐ Why QuickBite</a>
+      <a href="#contact" class="mobile-nav-link">📞 Contact Us</a>
+      <div class="mobile-auth-section" id="mobileAuthSection">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <span class="hero-tag">⚡ Super Fast Delivery within 30 Mins</span>
+        <h1 class="hero-title">Delicious Meals Delivered Straight To <span class="highlight">Your Doorstep.</span></h1>
+        <p class="hero-description">
+          Experience gourmet taste with QuickBite. Choose from our freshly prepared pizzas, handcrafted burgers, aromatic biryanis, and delightful desserts.
+        </p>
+        <div class="hero-cta-group">
+          <a href="#menu" class="btn btn-primary btn-lg">Explore Menu 🍕</a>
+          <a href="#features" class="btn btn-outline btn-lg">How It Works</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Dishes</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number">30m</span>
+            <span class="stat-label">Fast Delivery</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number">4.9★</span>
+            <span class="stat-label">Customer Rating</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-image-card">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="Delicious Food Platter" class="hero-img">
+          <div class="floating-badge badge-top">
+            <span class="badge-icon">🔥</span>
+            <div>
+              <strong>Hot & Fresh</strong>
+              <small>Straight from the kitchen</small>
+            </div>
+          </div>
+          <div class="floating-badge badge-bottom">
+            <span class="badge-icon">⭐</span>
+            <div>
+              <strong>4.9 / 5.0</strong>
+              <small>Over 1,200+ Reviews</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories & Food Catalog Section -->
+  <section class="menu-section" id="menu">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Menu Highlights</span>
+          <h2 class="section-title">Explore Our Delicious Menu</h2>
+          <p class="section-subtitle">Freshly prepared, sustainably packaged, and delivered hot.</p>
+        </div>
+        <!-- Status indicator for full-stack integration -->
+        <div class="catalog-status" id="catalogStatusBadge">
+          <span class="status-dot"></span>
+          <span id="catalogStatusText">Demo Menu (Client Mode)</span>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-filters" id="categoryFilters">
+        <button class="filter-pill active" data-category="All">All Dishes</button>
+        <button class="filter-pill" data-category="Pizza">🍕 Pizzas</button>
+        <button class="filter-pill" data-category="Burger">🍔 Burgers</button>
+        <button class="filter-pill" data-category="Biryani">🍚 Biryani</button>
+        <button class="filter-pill" data-category="Dessert">🍰 Desserts</button>
+        <button class="filter-pill" data-category="Beverage">🥤 Beverages</button>
+      </div>
+
+      <!-- Food Grid -->
+      <div class="food-grid" id="foodGrid">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+
+      <!-- Empty Search/Filter State -->
+      <div class="empty-state" id="emptyMenuState" style="display: none;">
+        <span class="empty-icon">🍽️</span>
+        <h3>No dishes found</h3>
+        <p>We couldn't find any dishes matching your search. Try adjusting keywords or category filters.</p>
+        <button class="btn btn-secondary btn-sm" id="resetFiltersBtn">Reset Filters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">Why Choose QuickBite</span>
+        <h2 class="section-title">Built For Flavor & Speed</h2>
+        <p class="section-subtitle">A modern full-stack ordering experience crafted for college project presentation.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Lightning Fast Delivery</h3>
+          <p>Orders are dispatched immediately through our optimized logistics network to reach you warm and fresh.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>100% Hygienic Food</h3>
+          <p>Prepared in certified partner kitchens adhering to rigorous safety and cleanliness standards.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Server-Calculated Billing</h3>
+          <p>Transparent pricing calculated reliably on the backend server to ensure honest totals without client tampering.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Multi-Device Friendly</h3>
+          <p>A fully responsive design that works seamlessly on desktop monitors, tablets, and smartphones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Shopping Cart Drawer Overlay -->
+  <div class="drawer-overlay" id="cartOverlay">
+    <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-labelledby="cartTitle">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <h2 id="cartTitle">Your Shopping Cart</h2>
+          <span class="cart-items-counter" id="cartItemsSubtitle">0 items</span>
+        </div>
+        <button class="close-btn" id="closeCartBtn" aria-label="Close Cart">&times;</button>
+      </div>
+
+      <!-- Cart Items List -->
+      <div class="drawer-body" id="cartItemsContainer">
+        <!-- Dynamic items or empty cart state -->
+      </div>
+
+      <!-- Cart Bill Breakdown & Checkout Footer -->
+      <div class="drawer-footer" id="cartFooter">
+        <div class="bill-row">
+          <span>Subtotal</span>
+          <span id="billSubtotal">₹0.00</span>
+        </div>
+        <div class="bill-row">
+          <span>Delivery Fee</span>
+          <span id="billDelivery">₹0.00</span>
+        </div>
+        <div class="bill-row">
+          <span>Taxes & GST (5%)</span>
+          <span id="billTaxes">₹0.00</span>
+        </div>
+        <div class="bill-row free-delivery-hint" id="freeDeliveryHint">
+          <span>Add ₹500+ for Free Delivery</span>
+        </div>
+        <hr class="bill-divider">
+        <div class="bill-row grand-total">
+          <span>Total Amount</span>
+          <span id="billGrandTotal">₹0.00</span>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg" id="proceedCheckoutBtn">
+          Proceed to Checkout ➔
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="checkoutModalOverlay">
+    <div class="modal-container checkout-modal" role="dialog" aria-labelledby="checkoutTitle">
+      <div class="modal-header">
+        <h2 id="checkoutTitle">Confirm Your Delivery Details</h2>
+        <button class="close-btn" id="closeCheckoutBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Notice banner -->
+        <div class="info-alert">
+          <span class="alert-icon">ℹ️</span>
+          <div>
+            <strong>College Project Demo Notice:</strong>
+            <p>Real payment processing is disabled. Orders will be submitted to the Express & MongoDB backend using Cash on Delivery (COD) in Stage 4/5.</p>
+          </div>
+        </div>
+
+        <form id="checkoutForm" novalidate>
+          <div class="form-group">
+            <label for="orderFullName">Full Name *</label>
+            <input type="text" id="orderFullName" placeholder="e.g. John Doe" required>
+            <small class="error-msg" id="orderNameError"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="orderPhone">Phone Number *</label>
+            <input type="tel" id="orderPhone" placeholder="e.g. 9876543210 (10 digits)" required>
+            <small class="error-msg" id="orderPhoneError"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="orderAddress">Delivery Address *</label>
+            <textarea id="orderAddress" rows="3" placeholder="Flat / House No., Landmark, Street, City, Pincode" required></textarea>
+            <small class="error-msg" id="orderAddressError"></small>
+          </div>
+
+          <div class="form-group">
+            <label>Payment Method</label>
+            <div class="payment-method-box selected" style="margin-bottom: 0.6rem;">
+              <span class="radio-dot">●</span>
+              <div>
+                <strong>Cash on Delivery (Active)</strong>
+                <p>Pay cash upon doorstep arrival. Verified directly on the backend server.</p>
+              </div>
+            </div>
+            <div class="payment-method-box disabled">
+              <span class="radio-dot" style="color: #94a3b8;">○</span>
+              <div>
+                <strong>Online Payment (UPI / Cards)<span class="payment-badge-coming-soon">Unavailable (Demo)</span></strong>
+                <p>Live gateway processing is disabled for this college demonstration project.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mini Order Summary in Checkout -->
+          <div class="checkout-summary-box">
+            <div class="summary-line">
+              <span>Items Total:</span>
+              <strong id="checkoutSummaryTotal">₹0.00</strong>
+            </div>
+            <div class="summary-line text-muted">
+              <span id="checkoutSummaryCount">0 items in your order</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-outline" id="cancelCheckoutBtn">Back to Cart</button>
+            <button type="submit" class="btn btn-primary" id="placeOrderSubmitBtn">Place Order</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authentication Modal (Sign In / Register) -->
+  <div class="modal-overlay" id="authModalOverlay">
+    <div class="modal-container auth-modal" role="dialog" aria-labelledby="authModalTitle">
+      <div class="modal-header">
+        <h2 id="authModalTitle">Welcome to QuickBite</h2>
+        <button class="close-btn" id="closeAuthBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Project Notice -->
+        <div class="info-alert">
+          <span class="alert-icon">🔐</span>
+          <div>
+            <strong>Authentication Overview:</strong>
+            <p>Stage 1 validates form inputs client-side. The Express & MongoDB backend (with bcrypt & JWT) will be connected in Stages 3–5.</p>
+          </div>
+        </div>
+
+        <!-- Auth Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" id="tabLoginBtn" type="button">Sign In</button>
+          <button class="auth-tab-btn" id="tabRegisterBtn" type="button">Create Account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form active" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="student@college.edu" autocomplete="email" required>
+            <small class="error-msg" id="loginEmailError"></small>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+            <small class="error-msg" id="loginPasswordError"></small>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="loginSubmitBtn">
+            Sign In to Account
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="auth-form" novalidate style="display: none;">
+          <div class="form-group">
+            <label for="registerName">Full Name</label>
+            <input type="text" id="registerName" placeholder="e.g. Rahul Sharma" autocomplete="name" required>
+            <small class="error-msg" id="registerNameError"></small>
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email Address</label>
+            <input type="email" id="registerEmail" placeholder="student@college.edu" autocomplete="email" required>
+            <small class="error-msg" id="registerEmailError"></small>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password (min 6 characters)</label>
+            <input type="password" id="registerPassword" placeholder="At least 6 characters" autocomplete="new-password" required>
+            <small class="error-msg" id="registerPasswordError"></small>
+          </div>
+          <div class="form-group">
+            <label for="registerConfirmPassword">Confirm Password</label>
+            <input type="password" id="registerConfirmPassword" placeholder="Re-enter password" autocomplete="new-password" required>
+            <small class="error-msg" id="registerConfirmPasswordError"></small>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="registerSubmitBtn">
+            Create Free Account
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Orders Modal -->
+  <div class="modal-overlay" id="ordersModalOverlay">
+    <div class="modal-container orders-modal" role="dialog" aria-labelledby="ordersTitle">
+      <div class="modal-header">
+        <h2 id="ordersTitle">My Order History</h2>
+        <button class="close-btn" id="closeOrdersBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body" id="ordersListContainer">
+        <!-- Rendered dynamically by script.js -->
+        <div class="empty-state">
+          <span class="empty-icon">📦</span>
+          <h3>No Orders Placed Yet</h3>
+          <p>When you place an order, your order details, server-verified bill, and real-time status will appear here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Contact & Footer Section -->
+  <footer class="footer" id="contact">
+    <div class="container footer-container">
+      <div class="footer-col brand-col">
+        <a href="#" class="brand-logo">
+          <span class="logo-icon">🍔</span>
+          <span class="logo-text">Quick<span>Bite</span></span>
+        </a>
+        <p class="footer-desc">
+          QuickBite is an end-to-end full-stack online food ordering application built as an academic engineering demonstration.
+        </p>
+        <div class="tech-stack-tags">
+          <span class="tech-tag">HTML5</span>
+          <span class="tech-tag">CSS3</span>
+          <span class="tech-tag">Vanilla JS</span>
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">Express</span>
+          <span class="tech-tag">MongoDB</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#menu">Food Menu</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#" id="footerCartLink">Shopping Cart</a></li>
+          <li><a href="#" id="footerAuthLink">Sign In / Register</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Food Categories</h4>
+        <ul class="footer-links">
+          <li><a href="#menu" data-footer-category="Pizza">Artisan Pizzas</a></li>
+          <li><a href="#menu" data-footer-category="Burger">Loaded Burgers</a></li>
+          <li><a href="#menu" data-footer-category="Biryani">Hyderabadi Biryani</a></li>
+          <li><a href="#menu" data-footer-category="Dessert">Sweet Desserts</a></li>
+          <li><a href="#menu" data-footer-category="Beverage">Chilled Beverages</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Academic Project Details</h4>
+        <p class="footer-text">
+          <strong>Course:</strong> Full-Stack Web Development<br>
+          <strong>Architecture:</strong> RESTful API + MongoDB Atlas<br>
+          <strong>Security:</strong> bcrypt Hashing &amp; JWT Guards
+        </p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 QuickBite — Online Food Ordering Website. Designed for academic demonstration.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
