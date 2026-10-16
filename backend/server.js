@@ -5,6 +5,7 @@
 
 // Load environment variables from backend/.env if present
 const path = require("path");
+const fs = require("fs");
 const dotenv = require("dotenv");
 
 // Try loading .env from current directory or backend directory
@@ -85,9 +86,25 @@ if (NODE_ENV !== "test") {
 }
 
 // ============================================================================
-// 3. ROOT & HEALTH CHECK ENDPOINTS
+// 3. STATIC FRONTEND SERVING
 // ============================================================================
+// Locate project root containing index.html, style.css, script.js, config.js
+const frontendDir = fs.existsSync(path.join(__dirname, "..", "index.html"))
+  ? path.join(__dirname, "..")
+  : __dirname;
+
+// Serve static assets (CSS, JS, images, config.js)
+app.use(express.static(frontendDir));
+
+// Explicit root route serving index.html
 app.get("/", (req, res) => {
+  res.sendFile(path.join(frontendDir, "index.html"));
+});
+
+// ============================================================================
+// 4. API STATUS & HEALTH CHECK ENDPOINTS
+// ============================================================================
+app.get("/api", (req, res) => {
   res.json({
     project: "QuickBite — Online Food Ordering Website API",
     version: "1.0.0",
@@ -116,7 +133,7 @@ app.get("/api/health", (req, res) => {
 });
 
 // ============================================================================
-// 4. API ROUTES
+// 5. API ROUTES
 // ============================================================================
 const authRoutes = require("./routes/authRoutes");
 const foodRoutes = require("./routes/foodRoutes");
@@ -126,9 +143,13 @@ app.use("/api/auth", authRoutes);
 app.use("/api/foods", foodRoutes);
 app.use("/api/orders", orderRoutes);
 
-// Serve static frontend assets from parent directory if present (e.g. single-service deployment)
-const frontendDir = path.join(__dirname, "..");
-app.use(express.static(frontendDir));
+// SPA fallback for any non-API routes (e.g. browser navigation)
+app.get("*", (req, res, next) => {
+  if (req.originalUrl.startsWith("/api")) {
+    return next(); // Pass unknown /api/* requests to notFoundHandler
+  }
+  res.sendFile(path.join(frontendDir, "index.html"));
+});
 
 // ============================================================================
 // 5. ERROR HANDLING MIDDLEWARE
